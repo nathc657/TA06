@@ -78,6 +78,7 @@ fun MedicalScreen() {
         LazyColumn(
             modifier = Modifier.padding(16.dp)
         ) {
+            //to make more cards, use the LocationItem function
             item {
                 LocationItem(
                     title = "12311 Hospital One Ave",
@@ -94,6 +95,18 @@ fun MedicalScreen() {
                 LocationItem(
                     title = "31357 Hospital Way",
                     time = "46 mins",
+                )
+            }
+            item {
+                LocationItem(
+                    title = "Pingo Bango Pongo",
+                    time = "67 mins",
+                )
+            }
+            item {
+                LocationItem(
+                    title = "Booboo bee boo boop",
+                    time = "567 mins",
                 )
             }
         }
