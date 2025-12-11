@@ -83,6 +83,7 @@ fun MedicalScreen(navController: NavController) {
         ) {
             items(hospitals.size) { index ->
                 val hospital = hospitals[index]
+                val cardColor = if (index % 2 == 0) Color(0xFFF0F0F0) else Color.White
                 LocationItem(
                     title = hospital.name,
                     time = when (index) {
@@ -91,6 +92,7 @@ fun MedicalScreen(navController: NavController) {
                         2 -> "46 mins"
                         else -> "20 mins"
                     },
+                    cardColor = cardColor,
                     onGoClick = {
 
                         navController.navigate("details/${hospital.name}")
@@ -105,13 +107,14 @@ fun MedicalScreen(navController: NavController) {
 fun LocationItem(
     title: String,
     time: String,
+    cardColor: Color,
     onGoClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = cardColor),
     ) {
         Row(
             modifier = Modifier
@@ -171,4 +174,3 @@ fun MedicalScreenPreview() {
         MedicalScreen(navController = navController)
     }
 }
-
