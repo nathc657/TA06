@@ -11,9 +11,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.finalproject.ui.theme.FinalProjectTheme
 
 @Composable
 fun HospitalDetailScreen(
@@ -25,8 +28,7 @@ fun HospitalDetailScreen(
             .fillMaxSize()
             .background(Color.White)
     ) {
-
-
+        // Map Box
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -63,7 +65,7 @@ fun HospitalDetailScreen(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-
+            // Hospital Name
             Text(
                 text = hospital.name,
                 fontWeight = FontWeight.Bold,
@@ -73,46 +75,48 @@ fun HospitalDetailScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
 
-            hospital.specializations.forEach { item ->
+            hospital.services.forEach { service ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .padding(vertical = 8.dp)
                         .fillMaxWidth()
                 ) {
-
-                    Text("•", fontSize = 18.sp)
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Text(item, fontSize = 16.sp)
+                    Text("•", fontSize = 18.sp, modifier = Modifier.padding(end = 12.dp))
+                    Text(service, fontSize = 16.sp)
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
-
-
-            Text(
-                "${hospital.availableBeds} AVAILABLE BEDS",
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp
-            )
-
             Spacer(modifier = Modifier.height(20.dp))
 
-
+            // Website
             Text(
-                hospital.website,
-                fontSize = 20.sp,
+                text = hospital.website,
+                fontSize = 16.sp,
                 fontWeight = FontWeight.Medium
             )
 
             Spacer(modifier = Modifier.height(20.dp))
 
-
+            // Phone
             Text(
-                hospital.phone,
-                fontSize = 22.sp,
+                text = hospital.phone,
+                fontSize = 18.sp,
                 fontWeight = FontWeight.Medium
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HospitalDetailScreenPreview() {
+    // Get the first hospital from the sample data for the preview
+    val sampleHospital = sampleHospitalData().first()
+    FinalProjectTheme {
+        HospitalDetailScreen(
+            navController = rememberNavController(),
+            hospital = sampleHospital
+        )
     }
 }

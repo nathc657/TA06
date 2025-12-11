@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -31,12 +32,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.finalproject.ui.theme.FinalProjectTheme
+import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MedicalScreen(navController: NavController) {
     val (searchQuery, setSearchQuery) = remember { mutableStateOf("") }
+    // Sort hospitals by distance and filter by search query
     val hospitals = sampleHospitalData()
+        .sortedBy { it.distanceInMeters }
+        .filter { it.name.contains(searchQuery, ignoreCase = true) }
 
     Column(
         modifier = Modifier
@@ -61,7 +66,6 @@ fun MedicalScreen(navController: NavController) {
             )
         )
 
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -81,20 +85,15 @@ fun MedicalScreen(navController: NavController) {
         LazyColumn(
             modifier = Modifier.padding(16.dp)
         ) {
-            items(hospitals.size) { index ->
-                val hospital = hospitals[index]
+            itemsIndexed(hospitals) { index, hospital ->
                 val cardColor = if (index % 2 == 0) Color(0xFFF0F0F0) else Color.White
+                // really rough estimate of time based on distance. will be fised with api
+                val timeInMinutes = (hospital.distanceInMeters / 1000) * 2.5
                 LocationItem(
                     title = hospital.name,
-                    time = when (index) {
-                        0 -> "20 mins"
-                        1 -> "13 mins"
-                        2 -> "46 mins"
-                        else -> "20 mins"
-                    },
+                    time = "${timeInMinutes.toInt()} mins",
                     cardColor = cardColor,
                     onGoClick = {
-
                         navController.navigate("details/${hospital.name}")
                     }
                 )
@@ -123,23 +122,23 @@ fun LocationItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Column {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(text = title, fontWeight = FontWeight.Bold, fontSize = 16.sp)
                 Spacer(modifier = Modifier.height(8.dp))
                 Row {
                     Icon(
                         Icons.Outlined.FavoriteBorder,
-                        contentDescription = null,
+                        contentDescription = "Favorite",
                         modifier = Modifier.padding(end = 16.dp)
                     )
                     Icon(
                         Icons.Outlined.Place,
-                        contentDescription = null,
+                        contentDescription = "Place",
                         modifier = Modifier.padding(end = 16.dp)
                     )
                     Icon(
                         Icons.Outlined.Share,
-                        contentDescription = null
+                        contentDescription = "Share"
                     )
                 }
             }
