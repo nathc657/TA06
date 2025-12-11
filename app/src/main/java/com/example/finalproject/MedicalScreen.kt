@@ -61,7 +61,7 @@ fun MedicalScreen(navController: NavController) {
             )
         )
 
-        // Map placeholder
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -78,7 +78,6 @@ fun MedicalScreen(navController: NavController) {
             )
         }
 
-        // Locations list
         LazyColumn(
             modifier = Modifier.padding(16.dp)
         ) {
@@ -93,7 +92,7 @@ fun MedicalScreen(navController: NavController) {
                         else -> "20 mins"
                     },
                     onGoClick = {
-                        // Navigate to detail screen for this hospital
+
                         navController.navigate("details/${hospital.name}")
                     }
                 )
@@ -148,7 +147,7 @@ fun LocationItem(
                     modifier = Modifier
                         .size(48.dp)
                         .background(Color(0xFFE8DFF5), shape = RoundedCornerShape(12.dp))
-                        .clickable { onGoClick() }, // ✅ GO is clickable
+                        .clickable { onGoClick() },
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -163,7 +162,7 @@ fun LocationItem(
     }
 }
 
-// Preview only (uses its own NavController)
+
 @Preview(showBackground = true)
 @Composable
 fun MedicalScreenPreview() {

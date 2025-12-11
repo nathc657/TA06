@@ -26,7 +26,7 @@ fun HospitalDetailScreen(
             .background(Color.White)
     ) {
 
-        // Map placeholder (top)
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -63,7 +63,7 @@ fun HospitalDetailScreen(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // Hospital name
+
             Text(
                 text = hospital.name,
                 fontWeight = FontWeight.Bold,
@@ -72,7 +72,7 @@ fun HospitalDetailScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Specializations list
+
             hospital.specializations.forEach { item ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -80,7 +80,7 @@ fun HospitalDetailScreen(
                         .padding(vertical = 8.dp)
                         .fillMaxWidth()
                 ) {
-                    // You can replace this with icons later
+
                     Text("•", fontSize = 18.sp)
                     Spacer(modifier = Modifier.width(12.dp))
                     Text(item, fontSize = 16.sp)
@@ -89,7 +89,7 @@ fun HospitalDetailScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Beds
+
             Text(
                 "${hospital.availableBeds} AVAILABLE BEDS",
                 fontWeight = FontWeight.Bold,
@@ -98,7 +98,7 @@ fun HospitalDetailScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Website
+
             Text(
                 hospital.website,
                 fontSize = 20.sp,
@@ -107,7 +107,7 @@ fun HospitalDetailScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Phone
+
             Text(
                 hospital.phone,
                 fontSize = 22.sp,

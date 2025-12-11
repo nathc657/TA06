@@ -52,7 +52,6 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.material.icons.extended)
 
-    // ✅ Jetpack Navigation for Compose (needed for NavHost, NavController, etc.)
     implementation("androidx.navigation:navigation-compose:2.8.0")
 
     testImplementation(libs.junit)

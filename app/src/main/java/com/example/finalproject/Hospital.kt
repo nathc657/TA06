@@ -8,7 +8,6 @@ data class Hospital(
     val phone: String
 )
 
-// Sample data for your 3 hospitals (matching your screenshots)
 fun sampleHospitalData(): List<Hospital> = listOf(
     Hospital(
         name = "12311 Hospital One Ave",
