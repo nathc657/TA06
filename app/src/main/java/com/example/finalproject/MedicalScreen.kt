@@ -1,18 +1,8 @@
-
 package com.example.finalproject
 
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -24,10 +14,13 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,11 +28,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.finalproject.ui.theme.FinalProjectTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MedicalScreen() {
+fun MedicalScreen(navController: NavController) {
+    val (searchQuery, setSearchQuery) = remember { mutableStateOf("") }
+    val hospitals = sampleHospitalData()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -47,8 +45,8 @@ fun MedicalScreen() {
     ) {
         // Search Bar
         TextField(
-            value = "",
-            onValueChange = {},
+            value = searchQuery,
+            onValueChange = setSearchQuery,
             placeholder = { Text("Search...") },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search Icon") },
             modifier = Modifier
@@ -58,12 +56,12 @@ fun MedicalScreen() {
             colors = TextFieldDefaults.colors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
-                unfocusedContainerColor = Color(0xFFF0F0F0), // Example color
-                focusedContainerColor = Color(0xFFF0F0F0) // Example color
+                unfocusedContainerColor = Color(0xFFF0F0F0),
+                focusedContainerColor = Color(0xFFF0F0F0)
             )
         )
 
-        // Map Placeholder
+        // Map placeholder
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -71,42 +69,33 @@ fun MedicalScreen() {
                 .background(Color.LightGray),
             contentAlignment = Alignment.Center
         ) {
-            Text("Map data ©2025", style = MaterialTheme.typography.bodySmall, modifier = Modifier.align(Alignment.BottomEnd).padding(4.dp))
+            Text(
+                "Map data ©2025",
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(4.dp)
+            )
         }
 
-        // Location List
+        // Locations list
         LazyColumn(
             modifier = Modifier.padding(16.dp)
         ) {
-            //to make more cards, use the LocationItem function
-            item {
+            items(hospitals.size) { index ->
+                val hospital = hospitals[index]
                 LocationItem(
-                    title = "12311 Hospital One Ave",
-                    time = "20 mins",
-                )
-            }
-            item {
-                LocationItem(
-                    title = "5153 Urgent Care Rd",
-                    time = "13 mins",
-                )
-            }
-            item {
-                LocationItem(
-                    title = "31357 Hospital Way",
-                    time = "46 mins",
-                )
-            }
-            item {
-                LocationItem(
-                    title = "Pingo Bango Pongo",
-                    time = "67 mins",
-                )
-            }
-            item {
-                LocationItem(
-                    title = "Booboo bee boo boop",
-                    time = "567 mins",
+                    title = hospital.name,
+                    time = when (index) {
+                        0 -> "20 mins"
+                        1 -> "13 mins"
+                        2 -> "46 mins"
+                        else -> "20 mins"
+                    },
+                    onGoClick = {
+                        // Navigate to detail screen for this hospital
+                        navController.navigate("details/${hospital.name}")
+                    }
                 )
             }
         }
@@ -114,7 +103,11 @@ fun MedicalScreen() {
 }
 
 @Composable
-fun LocationItem(title: String, time: String) {
+fun LocationItem(
+    title: String,
+    time: String,
+    onGoClick: () -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -132,9 +125,20 @@ fun LocationItem(title: String, time: String) {
                 Text(text = title, fontWeight = FontWeight.Bold, fontSize = 16.sp)
                 Spacer(modifier = Modifier.height(8.dp))
                 Row {
-                    Icon(Icons.Outlined.FavoriteBorder, contentDescription = null, modifier = Modifier.padding(end = 16.dp))
-                    Icon(Icons.Outlined.Place, contentDescription = null, modifier = Modifier.padding(end = 16.dp))
-                    Icon(Icons.Outlined.Share, contentDescription = null)
+                    Icon(
+                        Icons.Outlined.FavoriteBorder,
+                        contentDescription = null,
+                        modifier = Modifier.padding(end = 16.dp)
+                    )
+                    Icon(
+                        Icons.Outlined.Place,
+                        contentDescription = null,
+                        modifier = Modifier.padding(end = 16.dp)
+                    )
+                    Icon(
+                        Icons.Outlined.Share,
+                        contentDescription = null
+                    )
                 }
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -143,20 +147,29 @@ fun LocationItem(title: String, time: String) {
                 Box(
                     modifier = Modifier
                         .size(48.dp)
-                        .background(Color(0xFFE8DFF5), shape = RoundedCornerShape(12.dp)),
+                        .background(Color(0xFFE8DFF5), shape = RoundedCornerShape(12.dp))
+                        .clickable { onGoClick() }, // ✅ GO is clickable
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("GO", color = Color(0xFF673AB7), fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                    Text(
+                        "GO",
+                        color = Color(0xFF673AB7),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
+                    )
                 }
             }
         }
     }
 }
 
+// Preview only (uses its own NavController)
 @Preview(showBackground = true)
 @Composable
 fun MedicalScreenPreview() {
     FinalProjectTheme {
-        MedicalScreen()
+        val navController = rememberNavController()
+        MedicalScreen(navController = navController)
     }
 }
+

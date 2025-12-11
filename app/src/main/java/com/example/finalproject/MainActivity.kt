@@ -4,6 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.finalproject.ui.theme.FinalProjectTheme
 
 class MainActivity : ComponentActivity() {
@@ -12,7 +17,30 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             FinalProjectTheme {
-                MedicalScreen()
+                val navController = rememberNavController()
+
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    NavHost(
+                        navController = navController,
+                        startDestination = "medical"
+                    ) {
+                        composable("medical") {
+                            MedicalScreen(navController = navController)
+                        }
+
+                        composable("details/{hospitalName}") { backStackEntry ->
+                            val name = backStackEntry.arguments?.getString("hospitalName") ?: ""
+                            val hospital =
+                                sampleHospitalData().firstOrNull { it.name == name }
+                                    ?: sampleHospitalData().first()
+
+                            HospitalDetailScreen(
+                                navController = navController,
+                                hospital = hospital
+                            )
+                        }
+                    }
+                }
             }
         }
     }
