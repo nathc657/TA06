@@ -6,7 +6,9 @@ data class Hospital(
     val services: List<String>,
     val phone: String,
     val website: String,
-    val distanceInMeters: Int //yall use this for distance from current point?
+    val lat: Double,
+    val lng: Double,
+    val distanceInMeters: Int
 )
 
 fun sampleHospitalData(): List<Hospital> {
@@ -17,6 +19,8 @@ fun sampleHospitalData(): List<Hospital> {
             services = listOf("Children", "Cancer", "Emergency"),
             phone = "(800) 416-4441",
             website = "https://www.nemours.org",
+            lat = 39.7767,
+            lng = -75.5471,
             distanceInMeters = 8000
         ),
         Hospital(
@@ -25,6 +29,8 @@ fun sampleHospitalData(): List<Hospital> {
             services = listOf("Emergency", "Heart", "Cancer"),
             phone = "(302) 733-1000",
             website = "https://christianacare.org/us/en/facilities/",
+            lat = 39.6836,
+            lng = -75.6566,
             distanceInMeters = 5000
         ),
         Hospital(
@@ -33,15 +39,9 @@ fun sampleHospitalData(): List<Hospital> {
             services = listOf("Emergency", "Primary", "Ortho"),
             phone = "(302) 733-1000",
             website = "https://christianacare.org/us/en/facilities/",
+            lat = 39.7470,
+            lng = -75.5535,
             distanceInMeters = 9500
-        ),
-        Hospital(
-            name = "ChristianaCare Hospital Emergency Department",
-            address = "4755 Ogletown Stanton Rd, Newark, DE 19718",
-            services = listOf("Emergency", "Trauma", "Stroke"),
-            phone = "(302) 733-1000",
-            website = "https://christianacare.org/us/en/emergency",
-            distanceInMeters = 5100 // Slightly different to distinguish
         ),
         Hospital(
             name = "Saint Francis Hospital",
@@ -49,39 +49,9 @@ fun sampleHospitalData(): List<Hospital> {
             services = listOf("Emergency", "Heart", "Cancer"),
             phone = "(302) 421-4100",
             website = "https://www.trinityhealthma.org/location/saint-francis-hospital",
+            lat = 39.7464,
+            lng = -75.5750,
             distanceInMeters = 8500
-        ),
-        Hospital(
-            name = "ChristianaCare Union Hospital",
-            address = "106 Bow St, Elkton, MD 21921",
-            services = listOf("Emergency", "Heart", "Cancer"),
-            phone = "(410) 398-4000",
-            website = "https://www.uhcc.com/",
-            distanceInMeters = 15000
-        ),
-        Hospital(
-            name = "Wilmington VA Medical Center",
-            address = "1601 Kirkwood Hwy, Wilmington, DE 19805",
-            services = listOf("Primary", "Cancer", "Mental"),
-            phone = "(800) 461-8262",
-            website = "https://www.va.gov/wilmington-health-care/",
-            distanceInMeters = 7000
-        ),
-        Hospital(
-            name = "ChristianaCare-GoHealth Urgent Care",
-            address = "550 S College Ave Suite 115, Newark, DE 19713",
-            services = listOf("Urgent", "Injury", "Illness"),
-            phone = "(302) 273-0727",
-            website = "https://www.gohealthuc.com/christianacare/locations/star-campus",
-            distanceInMeters = 1200
-        ),
-        Hospital(
-            name = "ChristianaCare-GoHealth Urgent Care 2",
-            address = "360 Buckley Ml Rd suite b, Greenville, DE 19807",
-            services = listOf("Urgent", "Injury", "Illness"),
-            phone = "(302) 504-0253",
-            website = "https://www.gohealthuc.com/christianacare/locations/greenville",
-            distanceInMeters = 6000
         ),
         Hospital(
             name = "Newark Urgent Care",
@@ -89,6 +59,8 @@ fun sampleHospitalData(): List<Hospital> {
             services = listOf("Urgent", "Injury", "Illness"),
             phone = "(302) 738-4300",
             website = "https://newarkurgentcare.org/",
+            lat = 39.6837,
+            lng = -75.7497,
             distanceInMeters = 2500
         )
     )

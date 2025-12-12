@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.finalproject.ui.theme.FinalProjectTheme
-import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -95,7 +94,8 @@ fun MedicalScreen(navController: NavController) {
                     time = "${timeInMinutes.toInt()} mins",
                     cardColor = cardColor,
                     onGoClick = {
-                        navController.navigate("details/${hospital.name}")
+                        HospitalStore.selectedHospital = hospital
+                        navController.navigate("details")
                     }
                 )
             }
@@ -135,7 +135,11 @@ fun LocationItem(
                     Icon(
                         Icons.Outlined.Place,
                         contentDescription = "Place",
-                        modifier = Modifier.padding(end = 16.dp)
+                        modifier = Modifier
+                            .padding(end = 16.dp)
+                            .clickable {
+                                // placeholder action for now
+                            }
                     )
                     Icon(
                         Icons.Outlined.Share,

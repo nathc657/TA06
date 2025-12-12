@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.finalproject.ui.theme.FinalProjectTheme
 
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,16 +29,15 @@ class MainActivity : ComponentActivity() {
                             MedicalScreen(navController = navController)
                         }
 
-                        composable("details/{hospitalName}") { backStackEntry ->
-                            val name = backStackEntry.arguments?.getString("hospitalName") ?: ""
-                            val hospital =
-                                sampleHospitalData().firstOrNull { it.name == name }
-                                    ?: sampleHospitalData().first()
+                        composable("details") {
+                            val hospital = HospitalStore.selectedHospital
 
-                            HospitalDetailScreen(
-                                navController = navController,
-                                hospital = hospital
-                            )
+                            hospital?.let {
+                                HospitalDetailScreen(
+                                    navController = navController,
+                                    hospital = it
+                                )
+                            }
                         }
                     }
                 }

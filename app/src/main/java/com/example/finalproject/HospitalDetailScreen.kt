@@ -1,5 +1,8 @@
 package com.example.finalproject
 
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -117,6 +120,31 @@ fun HospitalDetailScreen(
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Medium
                 )
+                val context = LocalContext.current
+                //NAVIGATE TO GOOGLE MAPS AND USE ADDRESS DATA
+                Button(
+                    onClick = {
+                        val uri = Uri.parse(
+                            "google.navigation:q=${Uri.encode(hospital.address)}&mode=d"
+                        )
+                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                        intent.setPackage("com.google.android.apps.maps")
+                        context.startActivity(intent)
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(20.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF673AB7)
+                    )
+                ) {
+                    Text(
+                        text = "Navigate",
+                        color = Color.White,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
             }
         }
 
