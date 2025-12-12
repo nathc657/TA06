@@ -88,6 +88,7 @@ fun MedicalScreen(navController: NavController) {
             itemsIndexed(hospitals) { index, hospital ->
                 val cardColor = if (index % 2 == 0) Color(0xFFF0F0F0) else Color.White
                 // really rough estimate of time based on distance. will be fised with api
+
                 val timeInMinutes = (hospital.distanceInMeters / 1000) * 2.5
                 LocationItem(
                     title = hospital.name,

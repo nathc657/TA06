@@ -36,7 +36,7 @@ fun sampleHospitalData(): List<Hospital> {
             distanceInMeters = 9500
         ),
         Hospital(
-            name = "ChristianaCare Christiana Hospital Emergency Department",
+            name = "ChristianaCare Hospital Emergency Department",
             address = "4755 Ogletown Stanton Rd, Newark, DE 19718",
             services = listOf("Emergency", "Trauma", "Stroke"),
             phone = "(302) 733-1000",
