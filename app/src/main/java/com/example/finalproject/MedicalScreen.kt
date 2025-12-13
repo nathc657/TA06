@@ -1,5 +1,8 @@
 package com.example.finalproject
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,6 +16,7 @@ import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -20,8 +24,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,15 +38,28 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.finalproject.ui.theme.FinalProjectTheme
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.CameraPositionState
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.rememberCameraPositionState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MedicalScreen(navController: NavController) {
+fun MedicalScreen(navController: NavController,
+                  mapViewModel: MapViewModel,
+                  cameraPositionState : CameraPositionState
+) {
     val (searchQuery, setSearchQuery) = remember { mutableStateOf("") }
     // Sort hospitals by distance and filter by search query
     val hospitals = sampleHospitalData()
         .sortedBy { it.distanceInMeters }
         .filter { it.name.contains(searchQuery, ignoreCase = true) }
+
+    // Boolean for Google Map Rendering
+    var isMapLoaded by remember { mutableStateOf(false) }
+
+
 
     Column(
         modifier = Modifier
@@ -72,8 +91,37 @@ fun MedicalScreen(navController: NavController) {
                 .background(Color.LightGray),
             contentAlignment = Alignment.Center
         ) {
+            // Google Maps Composable
+            GoogleMap (
+                modifier = Modifier
+                    .fillMaxSize(),
+                onMapLoaded = { isMapLoaded = true },
+                cameraPositionState = cameraPositionState
+            ){
+                // Calls the marker function to add the markers to the map
+                HospitalMapMarker(hospitals, navController,mapViewModel)
+            }
+
+
+            // (Visuals) If the map isn't loaded, transition to a gray screen
+            androidx.compose.animation.AnimatedVisibility(
+                visible = !isMapLoaded,
+                enter = EnterTransition.None,
+                exit = fadeOut()
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background),
+                    contentAlignment = Alignment.Center
+                ) {
+                    // (Visuals) While the map is loading, show a progress indicator
+                    CircularProgressIndicator()
+                }
+            }
+
             Text(
-                "Map data ©2025",
+                "Google Maps ©2025",
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
@@ -86,7 +134,7 @@ fun MedicalScreen(navController: NavController) {
         ) {
             itemsIndexed(hospitals) { index, hospital ->
                 val cardColor = if (index % 2 == 0) Color(0xFFF0F0F0) else Color.White
-                // really rough estimate of time based on distance. will be fised with api
+                // really rough estimate of time based on distance. will be fused with api
 
                 val timeInMinutes = (hospital.distanceInMeters / 1000) * 2.5
                 LocationItem(
@@ -94,7 +142,7 @@ fun MedicalScreen(navController: NavController) {
                     time = "${timeInMinutes.toInt()} mins",
                     cardColor = cardColor,
                     onGoClick = {
-                        HospitalStore.selectedHospital = hospital
+                        HospitalStore.setSelectedHospital(hospital)
                         navController.navigate("details")
                     }
                 )
@@ -175,6 +223,9 @@ fun LocationItem(
 fun MedicalScreenPreview() {
     FinalProjectTheme {
         val navController = rememberNavController()
-        MedicalScreen(navController = navController)
+        MedicalScreen(navController = navController,
+            mapViewModel = MapViewModel(),
+            cameraPositionState = rememberCameraPositionState()
+        )
     }
 }

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.secrets.gradle.plugin)
 }
 
 android {
@@ -53,6 +54,11 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
 
     implementation("androidx.navigation:navigation-compose:2.8.0")
+    implementation("com.google.maps.android:maps-compose:6.12.0")
+    implementation("com.google.android.gms:play-services-maps:19.0.0")
+    implementation("com.google.maps.android:maps-compose-utils:6.12.0")
+
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
