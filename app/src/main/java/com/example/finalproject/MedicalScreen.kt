@@ -16,6 +16,7 @@ import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -93,20 +94,24 @@ fun MedicalScreen(navController: NavController) {
                     .fillMaxSize(),
                 onMapLoaded = { isMapLoaded = true },
                 cameraPositionState = cameraPositionState
-            ){}
+            ){
+
+            }
 
 
-            AnimatedVisibility(
+            androidx.compose.animation.AnimatedVisibility(
                 visible = !isMapLoaded,
-                modifier = Modifier.matchParentSize(),
                 enter = EnterTransition.None,
                 exit = fadeOut()
             ) {
-                CircularProgressIndicator(
+                Box(
                     modifier = Modifier
-                        .background(MaterialTheme.colorScheme.background)
-                        .wrapContentSize()
-                )
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
             }
 
 
