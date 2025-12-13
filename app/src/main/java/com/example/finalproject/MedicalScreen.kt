@@ -40,22 +40,24 @@ import androidx.navigation.compose.rememberNavController
 import com.example.finalproject.ui.theme.FinalProjectTheme
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.rememberCameraPositionState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MedicalScreen(navController: NavController) {
+fun MedicalScreen(navController: NavController,
+                  mapViewModel: MapViewModel,
+                  cameraPositionState : CameraPositionState
+) {
     val (searchQuery, setSearchQuery) = remember { mutableStateOf("") }
     // Sort hospitals by distance and filter by search query
     val hospitals = sampleHospitalData()
         .sortedBy { it.distanceInMeters }
         .filter { it.name.contains(searchQuery, ignoreCase = true) }
 
+    // Boolean for Google Map Rendering
     var isMapLoaded by remember { mutableStateOf(false) }
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(hospitals.first().lat,hospitals.first().lng), 10f)
-    }
 
 
 
@@ -97,7 +99,7 @@ fun MedicalScreen(navController: NavController) {
                 cameraPositionState = cameraPositionState
             ){
                 // Calls the marker function to add the markers to the map
-                HospitalMapMarker(hospitals, navController)
+                HospitalMapMarker(hospitals, navController,mapViewModel)
             }
 
 
@@ -119,7 +121,7 @@ fun MedicalScreen(navController: NavController) {
             }
 
             Text(
-                "Map data ©2025",
+                "Google Maps ©2025",
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
@@ -221,6 +223,9 @@ fun LocationItem(
 fun MedicalScreenPreview() {
     FinalProjectTheme {
         val navController = rememberNavController()
-        MedicalScreen(navController = navController)
+        MedicalScreen(navController = navController,
+            mapViewModel = MapViewModel(),
+            cameraPositionState = rememberCameraPositionState()
+        )
     }
 }

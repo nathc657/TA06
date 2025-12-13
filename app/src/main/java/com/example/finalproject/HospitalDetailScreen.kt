@@ -2,6 +2,8 @@ package com.example.finalproject
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.fadeOut
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -10,8 +12,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,13 +31,26 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.finalproject.ui.theme.FinalProjectTheme
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.CameraPositionState
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.rememberCameraPositionState
 import kotlin.random.Random
 
 @Composable
 fun HospitalDetailScreen(
     navController: NavController,
-    hospital: Hospital
+    hospital: Hospital,
+    mapViewModel: MapViewModel,
+    cameraPositionState : CameraPositionState,
+    hospitals: List<Hospital> = sampleHospitalData()
+
 ) {
+
+    // Boolean for Google Map Rendering
+    var isMapLoaded by remember { mutableStateOf(false) }
+
     // 1. Use a Box as the root to allow layering.
     Box(
         modifier = Modifier
@@ -52,10 +73,41 @@ fun HospitalDetailScreen(
                     .background(Color.LightGray),
                 contentAlignment = Alignment.BottomEnd
             ) {
+                // Google Maps Composable
+                GoogleMap (
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    onMapLoaded = { isMapLoaded = true },
+                    cameraPositionState = cameraPositionState
+                ){
+                    // Calls the marker function to add the markers to the map
+                    HospitalMapMarker(hospitals, navController,mapViewModel)
+                }
+
+
+                // (Visuals) If the map isn't loaded, transition to a gray screen
+                androidx.compose.animation.AnimatedVisibility(
+                    visible = !isMapLoaded,
+                    enter = EnterTransition.None,
+                    exit = fadeOut()
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colorScheme.background),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        // (Visuals) While the map is loading, show a progress indicator
+                        CircularProgressIndicator()
+                    }
+                }
+
                 Text(
-                    "Map data ©2025",
-                    modifier = Modifier.padding(6.dp),
-                    fontSize = 10.sp
+                    "Google Maps ©2025",
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(4.dp)
                 )
             }
 
@@ -170,7 +222,10 @@ fun HospitalDetailScreenPreview() {
     FinalProjectTheme {
         HospitalDetailScreen(
             navController = rememberNavController(),
-            hospital = sampleHospital
+            hospital = sampleHospital,
+            hospitals = sampleHospitalData(),
+            mapViewModel = MapViewModel(),
+            cameraPositionState = rememberCameraPositionState()
         )
     }
 }
