@@ -37,7 +37,7 @@ fun HospitalMapMarker(
             tag = hospital,
             icon = hospitalIcon,
             onClick = {
-                HospitalStore.selectedHospital = hospital
+                HospitalStore.setSelectedHospital(hospital)
                 scope.launch {
                     mapViewModel.cameraPositionState.animate(
                         update = CameraUpdateFactory.newCameraPosition(

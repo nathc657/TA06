@@ -16,6 +16,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.awaitAll
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 
 
 class MainActivity : ComponentActivity() {
@@ -42,7 +44,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable("details") {
-                            val hospital = HospitalStore.selectedHospital
+                            val hospital by HospitalStore.selectedHospital.collectAsState()
 
                             hospital?.let {
                                 HospitalDetailScreen(
@@ -50,7 +52,7 @@ class MainActivity : ComponentActivity() {
                                     hospital = it,
                                     mapViewModel = mapViewModel,
                                     cameraPositionState = rememberCameraPositionState {
-                                        position = CameraPosition.fromLatLngZoom(LatLng(hospital.lat, hospital.lng), 14f)
+                                        position = CameraPosition.fromLatLngZoom(LatLng(hospital!!.lat, hospital!!.lng), 14f)
                                     }
                                 )
                             }

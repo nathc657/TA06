@@ -142,7 +142,7 @@ fun MedicalScreen(navController: NavController,
                     time = "${timeInMinutes.toInt()} mins",
                     cardColor = cardColor,
                     onGoClick = {
-                        HospitalStore.selectedHospital = hospital
+                        HospitalStore.setSelectedHospital(hospital)
                         navController.navigate("details")
                     }
                 )
