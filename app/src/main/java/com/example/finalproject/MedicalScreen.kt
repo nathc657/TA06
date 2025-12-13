@@ -89,16 +89,19 @@ fun MedicalScreen(navController: NavController) {
                 .background(Color.LightGray),
             contentAlignment = Alignment.Center
         ) {
+            // Google Maps Composable
             GoogleMap (
                 modifier = Modifier
                     .fillMaxSize(),
                 onMapLoaded = { isMapLoaded = true },
                 cameraPositionState = cameraPositionState
             ){
-
+                // Calls the marker function to add the markers to the map
+                HospitalMapMarker(hospitals, navController)
             }
 
 
+            // (Visuals) If the map isn't loaded, transition to a gray screen
             androidx.compose.animation.AnimatedVisibility(
                 visible = !isMapLoaded,
                 enter = EnterTransition.None,
@@ -110,10 +113,10 @@ fun MedicalScreen(navController: NavController) {
                         .background(MaterialTheme.colorScheme.background),
                     contentAlignment = Alignment.Center
                 ) {
+                    // (Visuals) While the map is loading, show a progress indicator
                     CircularProgressIndicator()
                 }
             }
-
 
             Text(
                 "Map data ©2025",
